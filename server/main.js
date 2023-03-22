@@ -2,6 +2,10 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 
+import connectDB from './mongodb/connect.js';
+import postRoutes from './routes/post.js';
+import dalleRoutes from './routes/dalle.js';
+
 dotenv.config();
 
 const app = express();
@@ -13,9 +17,15 @@ app.get('/', async (req, res) => {
 });
 
 const startServer = async () => {
-    app.listen(9000, () => {
-        console.log('Server started on port http://localhost:9000');
-    });
+
+    try {
+        connectDB(process.env.MONGODB_URL);
+        app.listen(9000, () => {
+            console.log('Server started on port http://localhost:9000');
+        });
+    } catch (error) {
+        console.log(error);
+    }   
 }
 
 startServer();
